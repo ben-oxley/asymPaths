@@ -22,7 +22,7 @@ public class AsymPaths {
      */
     public static void main(String[] args) {
         System.out.println("runAnalyser");
-        String mapFile = "../build/map5000.txt";
+        String mapFile = "../build/map.txt";
         System.out.println(new File("").getAbsolutePath());
         AsymPaths.runAnalyser(mapFile);
     }

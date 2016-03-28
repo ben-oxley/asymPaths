@@ -72,15 +72,19 @@ public class Solver {
         }
         return lowestItem;
     }
-
-    public List<Point> findRoute(Point start, Point end, BiFunction<Point,Point,Integer> costFunction){
+    
+    private void trimMap(final Point start, final Point end){
         for (int col=0; col<xWidth; col++){
             for (int row=0; row<yHeight; row++){
                 if (lineDistance(start,end,new Point(col,row))>Math.sqrt((xWidth*xWidth)+(yHeight*yHeight))/10){
-                    costMap[col][row] = Integer.MAX_VALUE;
+                    costMap[col][row] = (int) Math.sqrt((xWidth*xWidth)+(yHeight*yHeight));
                 }
             }
         }
+    }
+
+    public List<Point> findRoute(Point start, Point end, BiFunction<Point,Point,Integer> costFunction){
+        //trimMap(start,end);
         PriorityQueue<Point> pq = new PriorityQueue<>((a,b)->fscore[a.x][a.y]-fscore[b.x][b.y]);
         gscore[start.x][start.y] = 0;
         fscore[start.x][start.y] = costFunction.apply(start, end);
