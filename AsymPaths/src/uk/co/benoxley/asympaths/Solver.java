@@ -45,6 +45,10 @@ public class Solver {
         return Math.abs(start.x-end.x)+Math.abs(start.y-end.y);
     }
     
+    public static int lineDistance(final Point start, final Point end, final Point point){
+        return (int) (Math.abs(((end.y-start.y)*point.x)-((end.x-start.x)*point.y)+(start.y*end.x)-(end.y*start.x))/Math.sqrt(((end.x-start.x)*(end.x-start.x))+((end.y-start.y)*(end.y-start.y))));
+    }
+    
     private List<Point> replayPath(Point[][] cameFrom, Point current, Point start){
         List<Point> totalPath = new ArrayList<>();
         totalPath.add(current);
@@ -70,12 +74,24 @@ public class Solver {
     }
 
     public List<Point> findRoute(Point start, Point end, BiFunction<Point,Point,Integer> costFunction){
+        for (int col=0; col<xWidth; col++){
+            for (int row=0; row<yHeight; row++){
+                if (lineDistance(start,end,new Point(col,row))>Math.sqrt((xWidth*xWidth)+(yHeight*yHeight))/10){
+                    costMap[col][row] = Integer.MAX_VALUE;
+                }
+            }
+        }
         PriorityQueue<Point> pq = new PriorityQueue<>((a,b)->fscore[a.x][a.y]-fscore[b.x][b.y]);
         gscore[start.x][start.y] = 0;
         fscore[start.x][start.y] = costFunction.apply(start, end);
         pq.add(start);
+        int i = 0;
         while (pq.size()>0){
             Point currentNode = pq.poll();
+            
+            if (++i%1000==0){
+                System.out.println("Progress: "+100*gscore[currentNode.x][currentNode.y]/(gscore[currentNode.x][currentNode.y]+distance(currentNode, end))+" Front = "+pq.size());
+            }
             if (currentNode.equals(end)){
                 return(replayPath(previousposition,end,start));
             }
