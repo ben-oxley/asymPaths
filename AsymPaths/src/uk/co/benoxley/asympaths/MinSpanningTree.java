@@ -50,11 +50,12 @@ public class MinSpanningTree {
                         .get().getValue();
                 Tree tree = forest.stream().filter(t->t.points.contains(path.to)).findAny().get();
                 forest.remove(tree);
+
+                forestCopy.get(0).edges.add(path);
+                forestCopy.get(0).edges.addAll(tree.edges);
+                forestCopy.get(0).points.addAll(tree.points);
                 forestCopy.remove(tree);
                 forestCopy.remove(forestCopy.get(0));
-                forest.get(0).edges.add(path);
-                forest.get(0).edges.addAll(tree.edges);
-                forest.get(0).points.addAll(tree.points);
                 
             }
         }
@@ -63,21 +64,31 @@ public class MinSpanningTree {
     
     public static Map<Point,Map<Point,Path>> generateCostMap(final List<Point> nodes, final int[][] map){
         Map<Point,Map<Point,Path>> costMap = new HashMap<>();
-        for (Point start : nodes){
+        nodes.parallelStream().forEach(start ->{
+            System.out.println("Working on "+start);
             costMap.put(start, new HashMap<>());
             for (Point end : nodes){
                 if (end!=start){
                     costMap.get(start).put(end, getPath(start, end, map));
                 }
             }
-        }
+        });
         return costMap;
     }
     
     public static Path getPath(Point start, Point end, final int[][] map){
-        Solver solver = new Solver(map);
-        List<Point> findRoute = solver.findRoute(start, end, Solver::distance);
-        int cost = findRoute.stream().mapToInt(p->map[p.x][p.y]).sum();
-        return new Path(findRoute,cost);
+        //Solver solver = new Solver(map);
+        //List<Point> findRoute = solver.findRoute(start, end, Solver::distance);
+        int cost = Solver.distance(start, end);//findRoute.stream().mapToInt(p->map[p.x][p.y]).sum();
+        List<Point> path = new ArrayList<>();
+        path.add(start);
+//        path.add(end);
+        while (!path.get(path.size()-1).equals(end)){
+            Point point = path.get(path.size()-1);
+            int xMove = Math.min(1,Math.max(-1,end.x-point.x));
+            int yMove = Math.min(1,Math.max(-1,end.y-point.y));
+            path.add(new Point(point.x+xMove,point.y+yMove));
+        }
+        return new Path(path,cost);
     }
 }

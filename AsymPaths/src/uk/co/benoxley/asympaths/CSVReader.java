@@ -40,4 +40,21 @@ public class CSVReader {
             }
         }
     }
+    
+    public static List<Point> readNodes(File file) throws IOException{
+        try (FileReader reader = new FileReader(file)) {
+            try (BufferedReader lineReader = new BufferedReader(reader)) {
+                List<Point> map = new ArrayList<>();
+                String line = lineReader.readLine();
+                line = lineReader.readLine();
+                while (line != null) {
+                    String[] split = line.split(",");
+                    List<Integer> node = Arrays.asList(split).stream().map(Integer::parseInt).collect(Collectors.toList());
+                    map.add(new Point(node.get(1), node.get(2)));
+                    line = lineReader.readLine();
+                }
+                return map;
+            }
+        }
+    }
 }
