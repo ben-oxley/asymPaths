@@ -6,6 +6,7 @@
 package uk.co.benoxley.asympaths;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -57,6 +58,7 @@ public class Solver {
             position = cameFrom[position.x][position.y];
             totalPath.add(position);
         }
+        Collections.reverse(totalPath);
         return totalPath;
     }
     
