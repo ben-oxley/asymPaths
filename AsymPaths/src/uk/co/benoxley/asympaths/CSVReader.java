@@ -6,8 +6,10 @@
 package uk.co.benoxley.asympaths;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +56,18 @@ public class CSVReader {
                     line = lineReader.readLine();
                 }
                 return map;
+            }
+        }
+    }
+    
+    public static void writeNodes(File file, List<Point> points) throws IOException{
+        try (FileWriter reader = new FileWriter(file)) {
+            try (BufferedWriter lineReader = new BufferedWriter(reader)) {
+                
+                lineReader.write("x,y\n");
+                for (Point point : points){
+                    lineReader.write(point.x+','+point.y+'\n');
+                }
             }
         }
     }

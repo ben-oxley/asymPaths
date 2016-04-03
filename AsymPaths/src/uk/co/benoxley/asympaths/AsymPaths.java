@@ -23,12 +23,12 @@ public class AsymPaths {
     public static void main(String[] args) {
         try {
             System.out.println("runAnalyser");
-            String mapFile = "../build/map5000.txt";
-            String nodesFile = "../build/path.txt";
+            String mapFile = args[0];//"../build/map5000.txt";
+            String nodesFile = args[1];//"../build/path.txt";
             System.out.println(new File("").getAbsolutePath());
             List<Point> nodes = CSVReader.readNodes(new File(nodesFile));
-            AsymPaths.runAnalyser(mapFile,nodes.get(0),nodes.get(1));
-            //AsymPaths.runAnalyser(mapFile,nodes.get(0),nodes.get(nodes.size()-1));
+            AsymPaths.runAnalyser(mapFile,nodes.get(0),nodes.get(1),"Test1.txt");
+            AsymPaths.runAnalyser(mapFile,nodes.get(0),nodes.get(nodes.size()-1),"Test2.txt");
             int[][] map = CSVReader.readMap(new File(mapFile)); 
             Tree tree = MinSpanningTree.BoruvkaAlgorithm(nodes, map);
             System.out.println("Number of edges in tree: "+tree.edges.size());
@@ -39,12 +39,13 @@ public class AsymPaths {
         
     }
     
-    public static void runAnalyser(String mapFile,Point start, Point end ){
+    public static void runAnalyser(String mapFile,Point start, Point end, String outFile){
         try {
             int[][] map = CSVReader.readMap(new File(mapFile));           
             Solver solver = new Solver(map);
             List<Point> findRoute = solver.findRoute(start, end, (a,b)->0);
             System.out.println(findRoute);
+            CSVReader.writeNodes(new File(outFile), findRoute);
         } catch (IOException ex) {
             Logger.getLogger(AsymPaths.class.getName()).log(Level.SEVERE, null, ex);
         }
