@@ -58,7 +58,7 @@ public class AsymPathsTest {
         System.out.println("runAnalyser");
         String mapFile = "../build/map.txt";
         System.out.println(new File("").getAbsolutePath());
-        AsymPaths.runAnalyser(mapFile,new Point(0,0),new Point(100,100));
+        //AsymPaths.runAnalyser(mapFile,new Point(0,0),new Point(100,100));
     }
     
 }
